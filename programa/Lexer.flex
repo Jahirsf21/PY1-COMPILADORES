@@ -6,11 +6,15 @@ import java_cup.runtime.Symbol;
 %cup
 %line
 %column
+%{
+    private int errores = 0;
+    public int getErrores() { return errores; }
+%}
 
 %%
 
 [0-9]+        { return new java_cup.runtime.Symbol(sym.NUMERO, yytext()); }
-[a-zA-Z]+     { return new java_cup.runtime.Symbol(sym.LETRA, yytext()); }
+[a-z]+     { return new java_cup.runtime.Symbol(sym.LETRA, yytext()); }
 [ \t\n\r]+    { /* ignorar espacios */ }
 
-.             { System.out.println("Error léxico: " + yytext()); }
+.             { errores++; System.out.println("Error léxico: " + yytext()); }
