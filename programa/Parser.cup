@@ -1,0 +1,11 @@
+import java_cup.runtime.*;
+
+terminal String NUMERO, LETRA;
+non terminal lista;
+
+start with lista;
+
+lista ::= lista NUMERO
+        | lista LETRA
+        | NUMERO
+        | LETRA;
