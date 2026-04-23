@@ -1,11 +1,30 @@
 import java_cup.runtime.*;
 
-terminal String NUMERO, LETRA;
-non terminal lista;
+terminal INT, FLOAT, CHAR, STRING_TYPE, BOOL, EMPTY;
+terminal TRUE, FALSE;
+terminal IF, ELSE, DO, WHILE;
+terminal SWITCH, CASE, DEFAULT, BREAK, RETURN;
+terminal CIN, COUT, MAIN;
 
-start with lista;
+terminal LESS_T, LESS_TE, GREATHER_T, GREATHER_TE, EQUAL, N_EQUAL;
 
-lista ::= lista NUMERO
-        | lista LETRA
-        | NUMERO
-        | LETRA;
+terminal INCREMENT, DECREMENT;
+terminal PLUS, MINUS, MULT, DIV, MOD, POW;
+
+terminal AND, OR, NOT;
+terminal ASSIGN;
+
+terminal BLOCK_START, BLOCK_END;
+terminal PAREN_OPEN, PAREN_CLOSE;
+terminal INDEX_START, INDEX_END;
+
+terminal SEPARATOR, COMMA, END_EXPR, COLON;
+
+terminal String  ID;
+terminal String  NUM_LITERAL, STRING_LITERAL, CHAR_LITERAL;
+
+non terminal programa;
+
+start with programa;
+
+programa ::= ;
