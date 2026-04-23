@@ -1,4 +1,5 @@
 import java.io.*;
+import java_cup.runtime.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -8,17 +9,13 @@ public class Main {
         }
         Reader reader = new BufferedReader(new FileReader(args[0]));
         Lexer lexer = new Lexer(reader);
-        parser p = new parser(lexer);
-        try {
-            p.parse();
-        } catch (Exception e) {
-            System.out.println("Error de sintaxis: " + e.getMessage());
-            System.exit(1);
-        }   
+
+        while (lexer.next_token().sym != sym.EOF) {}
+
         if (lexer.getErrores() > 0) {
-            System.out.println("Entrada invalida!");
-            System.exit(1);
+            System.out.println("Entrada inválida!");
+        } else {
+            System.out.println("Entrada válida!");
         }
-        System.out.println("Entrada válida!");
     }
 }
