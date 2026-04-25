@@ -7,15 +7,28 @@ public class Main {
             System.out.println("Uso: java Main <archivo_entrada>");
             return;
         }
-        Reader reader = new BufferedReader(new FileReader(args[0]));
-        Lexer lexer = new Lexer(reader);
+        String archivo_tokens = "resultado/archivo_tokens.txt";
+        try (
+            Reader reader = new BufferedReader(new FileReader(args[0]));
+            PrintWriter writer = new PrintWriter(new FileWriter(archivo_tokens))
+        ) {
+            Lexer lexer = new Lexer(reader);
+            Symbol token;
 
-        while (lexer.next_token().sym != sym.EOF) {}
+            while ((token = lexer.next_token()).sym != sym.EOF) {
+                String nombre_token = sym.terminalNames[token.sym];
+                String lexema = (token.value != null) ? token.value.toString() : "";
+                writer.println("Token: " + nombre_token + ", Lexema: " + lexema);
+            }
+            
+            if (lexer.getErrores() > 0) {
+                System.out.println("Entrada invalida");   
+            }
+            System.out.println("Entrada válida");
 
-        if (lexer.getErrores() > 0) {
-            System.out.println("Entrada inválida!");
-        } else {
-            System.out.println("Entrada válida!");
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo de entrada o escribir el de salida.");
+            e.printStackTrace();
         }
     }
 }
