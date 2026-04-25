@@ -34,9 +34,9 @@ EXPONENTIAL = {INT_POS} "e" {INT_POS}
 NUMBER = {INTEGER} {DECIMAL}? | "-" "0" {DECIMAL} | {EXPONENTIAL}
 FRAC_NUMBER = {INTEGER} "/" {INTEGER}
 
-STRING = \"({LETTER}|{DIGIT}|" "|"+"|"-"|"*"|"/"|"%"|"^")*\"
-CHAR = \'({LETTER} | {DIGIT})\'
-
+SIMBOLO   = [!\"#$%&()*+,\-./:;<=>?@\[\]\^_\{|\}~¿] | "`"
+CHAR      = \'({LETTER} | {DIGIT} | {SIMBOLO})\'
+STRING    = \"({LETTER} | {DIGIT} | " " | {SIMBOLO})*\"
 ID = {LETTERS}({LETTERS}|{DIGIT})*
 
 %%
