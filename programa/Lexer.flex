@@ -12,33 +12,29 @@ import java_cup.runtime.*;
   public int getErrores() { return errores; }
 
   private Symbol symbol(int type) {
-    return new Symbol(type, yyline, yycolumn);
+    return new Symbol(type, yyline, yycolumn, yytext());
   }
   private Symbol symbol(int type, Object value) {
     return new Symbol(type, yyline, yycolumn, value);
   }
 %}
 
-
 DIGIT     = [0-9]
 DIGIT_NO_ZERO = [1-9]
 LETTER    = [a-zA-Z_]
 LETTERS   = {LETTER}+
 WHITESPACE = [ \n]+
-
 INT_POS = "0" | {DIGIT_NO_ZERO} {DIGIT}*
 INT_NEG = "-" {DIGIT_NO_ZERO} {DIGIT}*
 INTEGER = {INT_POS} | {INT_NEG}
+FRAC_NUMBER = {INTEGER} "//" {INTEGER}
 DECIMAL = "." {DIGIT}+
 EXPONENTIAL = {INT_POS} "e" {INT_POS}
-NUMBER = {INTEGER} {DECIMAL}? | "-" "0" {DECIMAL} | {EXPONENTIAL}
-FRAC_NUMBER = {INTEGER} "/" {INTEGER}
-
+NUMBER = {INTEGER} {DECIMAL}? | "-" "0" {DECIMAL} | {EXPONENTIAL} | {FRAC_NUMBER}
 SIMBOLO   = [!\"#$%&()*+,\-./:;<=>?@\[\]\^_\{|\}~¿] | "`"
 CHAR      = \'({LETTER} | {DIGIT} | {SIMBOLO})\'
 STRING    = \"({LETTER} | {DIGIT} | " " | {SIMBOLO})*\"
 ID = {LETTERS}({LETTERS}|{DIGIT})*
-
 %%
 
 /* REGLAS */
@@ -114,11 +110,9 @@ ID = {LETTERS}({LETTERS}|{DIGIT})*
 
 
 /* literales */
-{FRAC_NUMBER} {return symbol(sym.NUM_LITERAL, yytext());}
-{NUMBER}      {return symbol(sym.NUM_LITERAL, yytext());}
-{STRING}      {return symbol(sym.STRING_LITERAL, yytext());}
-{CHAR}        {return symbol(sym.CHAR_LITERAL, yytext());}
-
-{ID}          {return symbol(sym.ID, yytext()); }
+{NUMBER}      {return symbol(sym.NUM_LITERAL);}
+{STRING}      {return symbol(sym.STRING_LITERAL);}
+{CHAR}        {return symbol(sym.CHAR_LITERAL);}
+{ID}          {return symbol(sym.ID); }
 
 [^]  { errores++; System.err.println("Error léxico en línea " + (yyline+1) + ", columna " + (yycolumn+1) + ": caracter desconocido '" + yytext() + "'"); }
