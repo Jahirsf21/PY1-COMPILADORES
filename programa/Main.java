@@ -7,24 +7,40 @@ public class Main {
             System.out.println("Uso: java Main <archivo_entrada>");
             return;
         }
+
         String archivo_tokens = "resultado/archivo_tokens.txt";
-        try (
-            Reader reader = new BufferedReader(new FileReader(args[0]));
-            PrintWriter writer = new PrintWriter(new FileWriter(archivo_tokens))
-        ) {
-            Lexer lexer = new Lexer(reader);
+
+        try {
+
+            Reader readerLex = new BufferedReader(new FileReader(args[0]));
+            PrintWriter writer = new PrintWriter(new FileWriter(archivo_tokens));
+            Lexer lexer1 = new Lexer(readerLex);
             Symbol token;
 
-            while ((token = lexer.next_token()).sym != sym.EOF) {
+            while ((token = lexer1.next_token()).sym != sym.EOF) {
                 String nombre_token = sym.terminalNames[token.sym];
                 String lexema = (token.value != null) ? token.value.toString() : "";
                 writer.println("Token: " + nombre_token + ", Lexema: " + lexema);
             }
-            
-            if (lexer.getErrores() > 0) {
-                System.out.println("Entrada invalida");   
+            writer.close();
+            readerLex.close();
+
+            Reader readerPar = new BufferedReader(new FileReader(args[0]));
+            Lexer lexer2 = new Lexer(readerPar);
+            parser parser = new parser(lexer2);
+            parser.parse();
+            readerPar.close();
+
+            int errores_lexicos = lexer2.get_errores();
+            int errores_sintacticos = parser.get_errores_sintacticos();
+
+            if (errores_lexicos > 0 || errores_sintacticos > 0) {
+                System.out.println("Errores léxicos: " + errores_lexicos);
+                System.out.println("Errores sintácticos: " + errores_sintacticos);
+                System.out.println("El archivo no puede ser generado por la gramática.");
+            } else {
+                System.out.println("El archivo puede ser generado por la gramática.");
             }
-            System.out.println("Entrada válida");
 
         } catch (IOException e) {
             System.err.println("Error al leer el archivo de entrada o escribir el de salida.");
