@@ -9,7 +9,7 @@ import java_cup.runtime.*;
 %{
   private int errores = 0;
 
-  public int getErrores() { return errores; }
+  public int get_errores() { return errores; }
 
   private Symbol symbol(int type) {
     return new Symbol(type, yyline, yycolumn, yytext());
