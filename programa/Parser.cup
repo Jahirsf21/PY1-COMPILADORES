@@ -1,5 +1,6 @@
 import java_cup.runtime.*;
 
+/* ── Terminales ── */
 terminal INT, FLOAT, CHAR, STRING_TYPE, BOOL, EMPTY;
 terminal TRUE, FALSE;
 terminal IF, ELSE, DO, WHILE;
@@ -7,24 +8,192 @@ terminal SWITCH, CASE, DEFAULT, BREAK, RETURN;
 terminal CIN, COUT, MAIN;
 
 terminal LESS_T, LESS_TE, GREATHER_T, GREATHER_TE, EQUAL, N_EQUAL;
-
 terminal INCREMENT, DECREMENT;
 terminal PLUS, MINUS, MULT, DIV, MOD, POW;
-
 terminal AND, OR, NOT;
 terminal ASSIGN;
-
 terminal BLOCK_START, BLOCK_END;
 terminal PAREN_OPEN, PAREN_CLOSE;
 terminal INDEX_START, INDEX_END;
-
 terminal SEPARATOR, COMMA, END_EXPR, COLON;
 
-terminal String  ID;
-terminal String  NUM_LITERAL, STRING_LITERAL, CHAR_LITERAL;
+terminal String ID;
+terminal String NUM_LITERAL, STRING_LITERAL, CHAR_LITERAL;
 
+/* ── No terminales ── */
 non terminal programa;
+non terminal main;
+non terminal lista_funciones;
+non terminal crear_funcion;
+non terminal opt_parametros;
+non terminal lista_parametros;
+non terminal parametro;
+non terminal lista_sentencias;
+non terminal sentencia;
+non terminal crear_variable;
+non terminal asignar_variable;
+non terminal crear_arreglo;
+non terminal modificar_arreglo;
+non terminal opt_asignacion_variable;
+non terminal opt_asignacion_arreglo;
+non terminal fila_arreglo;
+non terminal lista_filas;
+non terminal lista_num_arreglo;
+non terminal elementos_arreglo;
+non terminal sentencia_if;
+non terminal opt_else;
+non terminal sentencia_do_while;
+non terminal sentencia_switch;
+non terminal lista_casos;
+non terminal caso;
+non terminal opt_break;
+non terminal opt_default;
+non terminal sentencia_return;
+non terminal sentencia_break;
+non terminal cin;
+non terminal cout;
+non terminal llamada_funcion;
+non terminal opt_args;
+non terminal lista_args;
+non terminal acceso_arreglo;
+non terminal tipo_dato;
+non terminal tipo_dato_arreglo;
+non terminal tipo_dato_funcion;
+non terminal expresion;
+non terminal expresion_disyuncion;
+non terminal expresion_conjuncion;
+non terminal expresion_igualdad;
+non terminal expresion_relacional;
+non terminal expresion_suma;
+non terminal expresion_multiplicacion;
+non terminal expresion_potencia;
+non terminal expresion_unaria;
+non terminal expresion_primaria;
+non terminal literal;
+non terminal literal_caso;
+non terminal opt_lista_sentencias;
 
 start with programa;
 
-programa ::= ;
+/*  programa  */
+
+programa ::=  lista_funciones main;
+
+lista_funciones ::= | lista_funciones crear_funcion;
+
+main ::= EMPTY SEPARATOR MAIN PAREN_OPEN PAREN_CLOSE BLOCK_START opt_lista_sentencias BLOCK_END;
+
+
+/*  funciones  */
+
+crear_funcion ::= tipo_dato_funcion SEPARATOR ID PAREN_OPEN opt_parametros PAREN_CLOSE BLOCK_START opt_lista_sentencias BLOCK_END;
+
+opt_parametros ::= | lista_parametros;
+
+lista_parametros ::= parametro | lista_parametros COMMA parametro;
+
+parametro ::= tipo_dato SEPARATOR ID;
+
+/*  tipos  */
+
+tipo_dato ::= INT | FLOAT | CHAR | STRING_TYPE | BOOL;
+
+tipo_dato_arreglo ::= INT | FLOAT;
+
+tipo_dato_funcion ::= INT | FLOAT | CHAR | STRING_TYPE | BOOL;
+
+/*  sentencias  */
+
+opt_lista_sentencias ::= | lista_sentencias;
+
+lista_sentencias ::= sentencia | lista_sentencias sentencia;
+
+sentencia ::= crear_variable | asignar_variable | crear_arreglo | modificar_arreglo | sentencia_if | sentencia_do_while | sentencia_switch | sentencia_return | sentencia_break | cin | cout | llamada_funcion END_EXPR | expresion END_EXPR;
+
+/*  variables  */
+crear_variable ::= tipo_dato SEPARATOR ID opt_asignacion_variable END_EXPR;
+
+opt_asignacion_variable ::= | ASSIGN expresion;
+
+asignar_variable ::= ID ASSIGN expresion END_EXPR;
+
+/*  arreglos  */
+
+crear_arreglo ::= tipo_dato_arreglo SEPARATOR ID INDEX_START NUM_LITERAL INDEX_END INDEX_START NUM_LITERAL INDEX_END opt_asignacion_arreglo END_EXPR;
+
+opt_asignacion_arreglo ::= | ASSIGN elementos_arreglo;
+
+elementos_arreglo ::= BLOCK_START lista_filas BLOCK_END;
+
+lista_filas ::= fila_arreglo | lista_filas COMMA fila_arreglo;
+
+fila_arreglo ::= BLOCK_START NUM_LITERAL lista_num_arreglo BLOCK_END;
+
+lista_num_arreglo ::= | lista_num_arreglo COMMA NUM_LITERAL;
+
+modificar_arreglo ::= acceso_arreglo ASSIGN expresion END_EXPR;
+
+acceso_arreglo ::= ID INDEX_START expresion INDEX_END INDEX_START expresion INDEX_END;
+
+/*  bloques de control */
+
+sentencia_if ::= IF PAREN_OPEN expresion PAREN_CLOSE BLOCK_START opt_lista_sentencias BLOCK_END opt_else;
+
+opt_else ::= | ELSE BLOCK_START opt_lista_sentencias BLOCK_END;
+
+sentencia_do_while ::= DO BLOCK_START opt_lista_sentencias BLOCK_END WHILE PAREN_OPEN expresion PAREN_CLOSE END_EXPR;
+
+sentencia_switch ::= SWITCH PAREN_OPEN expresion PAREN_CLOSE BLOCK_START lista_casos opt_default BLOCK_END;
+
+lista_casos ::= caso | lista_casos caso;
+
+caso ::= CASE SEPARATOR literal_caso COLON opt_lista_sentencias opt_break;
+
+opt_break ::= | sentencia_break;
+
+opt_default ::= | DEFAULT COLON opt_lista_sentencias;
+
+sentencia_return ::= RETURN SEPARATOR expresion END_EXPR;
+
+sentencia_break ::= BREAK END_EXPR;
+
+/*  CIN / COUT */
+
+cin ::= CIN PAREN_OPEN ID PAREN_CLOSE END_EXPR;
+
+cout ::= COUT PAREN_OPEN expresion PAREN_CLOSE END_EXPR;
+
+/*  llamada a funcion */
+
+llamada_funcion ::= ID PAREN_OPEN opt_args PAREN_CLOSE;
+
+opt_args ::= | lista_args;
+
+lista_args ::= expresion | lista_args COMMA expresion;
+
+/*  expresiones */
+
+expresion ::= expresion_disyuncion;
+
+expresion_disyuncion ::= expresion_conjuncion | expresion_disyuncion OR expresion_conjuncion;
+
+expresion_conjuncion ::= expresion_igualdad | expresion_conjuncion AND expresion_igualdad;
+
+expresion_igualdad ::= expresion_relacional | EQUAL PAREN_OPEN expresion COMMA expresion PAREN_CLOSE | N_EQUAL PAREN_OPEN expresion COMMA expresion PAREN_CLOSE;
+
+expresion_relacional ::= expresion_suma | LESS_T PAREN_OPEN expresion COMMA expresion PAREN_CLOSE | LESS_TE PAREN_OPEN expresion COMMA expresion PAREN_CLOSE | GREATHER_T PAREN_OPEN expresion COMMA expresion PAREN_CLOSE | GREATHER_TE PAREN_OPEN expresion COMMA expresion PAREN_CLOSE;
+
+expresion_suma ::= expresion_multiplicacion | expresion_suma PLUS expresion_multiplicacion | expresion_suma MINUS expresion_multiplicacion;
+
+expresion_multiplicacion ::= expresion_potencia | expresion_multiplicacion MULT expresion_potencia | expresion_multiplicacion DIV  expresion_potencia | expresion_multiplicacion MOD  expresion_potencia;
+
+expresion_potencia ::= expresion_unaria | expresion_unaria POW expresion_potencia;
+
+expresion_unaria ::= expresion_primaria | MINUS expresion_unaria | NOT expresion_unaria | INCREMENT ID | DECREMENT ID;
+
+expresion_primaria ::= literal | ID | llamada_funcion | acceso_arreglo | PAREN_OPEN expresion PAREN_CLOSE;
+
+/*  literales */
+literal ::= NUM_LITERAL | STRING_LITERAL | CHAR_LITERAL | TRUE | FALSE;
+
+literal_caso ::= NUM_LITERAL | CHAR_LITERAL;
