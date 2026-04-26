@@ -1,5 +1,20 @@
 import java_cup.runtime.*;
 
+parser code {:
+    private int errores_sintacticos = 0;
+    public void syntax_error(Symbol s) {
+        errores_sintacticos++;
+        System.out.println("Error sintáctico en la línea " + (s.left + 1) + ", columna " + (s.right + 1) + ". Valor no esperado: '" + s.value + "'");
+    }
+    public void unrecovered_syntax_error(Symbol s) {
+        errores_sintacticos++;
+        System.out.println("Error sintáctico irrecuperable en la línea " + (s.left + 1) + ", columna " + (s.right + 1) + ". valor: '" + s.value + "'");
+    }
+    public int get_errores_sintacticos() {
+        return errores_sintacticos;
+    }
+:}
+
 /* ── Terminales ── */
 terminal INT, FLOAT, CHAR, STRING_TYPE, BOOL, EMPTY;
 terminal TRUE, FALSE;
@@ -46,7 +61,6 @@ non terminal sentencia_do_while;
 non terminal sentencia_switch;
 non terminal lista_casos;
 non terminal caso;
-non terminal opt_break;
 non terminal opt_default;
 non terminal sentencia_return;
 non terminal sentencia_break;
@@ -57,8 +71,6 @@ non terminal opt_args;
 non terminal lista_args;
 non terminal acceso_arreglo;
 non terminal tipo_dato;
-non terminal tipo_dato_arreglo;
-non terminal tipo_dato_funcion;
 non terminal expresion;
 non terminal expresion_disyuncion;
 non terminal expresion_conjuncion;
@@ -86,7 +98,7 @@ main ::= EMPTY SEPARATOR MAIN PAREN_OPEN PAREN_CLOSE BLOCK_START opt_lista_sente
 
 /*  funciones  */
 
-crear_funcion ::= tipo_dato_funcion SEPARATOR ID PAREN_OPEN opt_parametros PAREN_CLOSE BLOCK_START opt_lista_sentencias BLOCK_END;
+crear_funcion ::= tipo_dato SEPARATOR ID PAREN_OPEN opt_parametros PAREN_CLOSE BLOCK_START opt_lista_sentencias BLOCK_END;
 
 opt_parametros ::= | lista_parametros;
 
@@ -98,17 +110,13 @@ parametro ::= tipo_dato SEPARATOR ID;
 
 tipo_dato ::= INT | FLOAT | CHAR | STRING_TYPE | BOOL;
 
-tipo_dato_arreglo ::= INT | FLOAT;
-
-tipo_dato_funcion ::= INT | FLOAT | CHAR | STRING_TYPE | BOOL;
-
 /*  sentencias  */
 
-opt_lista_sentencias ::= | lista_sentencias;
+opt_lista_sentencias ::= | lista_sentencias | error BLOCK_END;
 
 lista_sentencias ::= sentencia | lista_sentencias sentencia;
 
-sentencia ::= crear_variable | asignar_variable | crear_arreglo | modificar_arreglo | sentencia_if | sentencia_do_while | sentencia_switch | sentencia_return | sentencia_break | cin | cout | llamada_funcion END_EXPR | expresion END_EXPR;
+sentencia ::= crear_variable | asignar_variable | crear_arreglo | modificar_arreglo | sentencia_if | sentencia_do_while | sentencia_switch | sentencia_return | sentencia_break | cin | cout | expresion END_EXPR | error END_EXPR;
 
 /*  variables  */
 crear_variable ::= tipo_dato SEPARATOR ID opt_asignacion_variable END_EXPR;
@@ -119,7 +127,7 @@ asignar_variable ::= ID ASSIGN expresion END_EXPR;
 
 /*  arreglos  */
 
-crear_arreglo ::= tipo_dato_arreglo SEPARATOR ID INDEX_START NUM_LITERAL INDEX_END INDEX_START NUM_LITERAL INDEX_END opt_asignacion_arreglo END_EXPR;
+crear_arreglo ::= tipo_dato SEPARATOR ID INDEX_START NUM_LITERAL INDEX_END INDEX_START NUM_LITERAL INDEX_END opt_asignacion_arreglo END_EXPR;
 
 opt_asignacion_arreglo ::= | ASSIGN elementos_arreglo;
 
@@ -147,9 +155,7 @@ sentencia_switch ::= SWITCH PAREN_OPEN expresion PAREN_CLOSE BLOCK_START lista_c
 
 lista_casos ::= caso | lista_casos caso;
 
-caso ::= CASE SEPARATOR literal_caso COLON opt_lista_sentencias opt_break;
-
-opt_break ::= | sentencia_break;
+caso ::= CASE SEPARATOR literal_caso COLON opt_lista_sentencias;
 
 opt_default ::= | DEFAULT COLON opt_lista_sentencias;
 
