@@ -417,6 +417,12 @@ class Lexer implements java_cup.runtime.Scanner {
   /* user code: */
   private int errores = 0;
 
+  private boolean notificacion = false;
+
+  public void set_notificar_errores(boolean notificacion) {
+    this.notificacion = notificacion;
+  }
+
   public int get_errores() { return errores; }
 
   private Symbol symbol(int type) {
@@ -851,7 +857,7 @@ class Lexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { errores++; System.err.println("Error léxico en línea " + (yyline+1) + ", columna " + (yycolumn+1) + ": caracter desconocido '" + yytext() + "'");
+            { errores++; if (!notificacion) System.err.println("Error léxico en línea " + (yyline+1) + ", columna " + (yycolumn+1) + ": caracter desconocido '" + yytext() + "'");
             }
           // fall through
           case 57: break;

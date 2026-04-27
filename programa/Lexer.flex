@@ -9,6 +9,12 @@ import java_cup.runtime.*;
 %{
   private int errores = 0;
 
+  private boolean notificacion = false;
+
+  public void set_notificar_errores(boolean notificacion) {
+    this.notificacion = notificacion;
+  }
+
   public int get_errores() { return errores; }
 
   private Symbol symbol(int type) {
@@ -113,5 +119,5 @@ ID = {LETTERS}({LETTERS}|{DIGIT})*
   {CHAR}        {return symbol(sym.CHAR_LITERAL);}
   {ID}          {return symbol(sym.ID); }
 
-  [^]  { errores++; System.err.println("Error léxico en línea " + (yyline+1) + ", columna " + (yycolumn+1) + ": caracter desconocido '" + yytext() + "'"); }
+  [^]  { errores++; if (!not ificacion) System.err.println("Error léxico en línea " + (yyline+1) + ", columna " + (yycolumn+1) + ": caracter desconocido '" + yytext() + "'"); }
 }

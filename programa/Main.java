@@ -27,6 +27,7 @@ public class Main {
 
             Reader readerPar = new BufferedReader(new FileReader(args[0]));
             Lexer lexer2 = new Lexer(readerPar);
+            lexer2.set_notificar_errores(true);
             parser parser = new parser(lexer2);
             parser.parse();
             readerPar.close();
