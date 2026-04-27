@@ -65,6 +65,7 @@ public class SymbolsTable {
      * Muestra cada scope con su nombre y los símbolos declarados en ese scope, con su nombre, categoría, tipo y posición (fila y columna).
      */
     public void imprimir_tabla() {
+        System.out.println("========== TABLA DE SIMBOLOS ==========");
         for (Scope funcion : funciones) {
             imprimir_scope(funcion, 0);
             System.out.println();
@@ -79,6 +80,10 @@ public class SymbolsTable {
         String indent = "  ".repeat(nivel);
         String prefijo = (nivel == 0) ? "Scope: [" : "└── Scope: [";
         System.out.println(indent + prefijo + actual.getNombre() + "]");
+        
+        if (actual.getSimbolos().isEmpty() && actual.getHijos().isEmpty()) {
+            System.out.println(indent + "  (vacío)");
+        }
 
         for (Symbols s : actual.getSimbolos()) {
             System.out.println(indent + "  ├── " + s.toString());

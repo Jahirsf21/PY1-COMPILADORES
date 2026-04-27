@@ -40,6 +40,7 @@ public class Main {
                 System.out.println("El archivo no puede ser generado por la gramática.");
             } else {
                 System.out.println("El archivo puede ser generado por la gramática.");
+                parser.tabla.imprimir_tabla();
             }
 
         } catch (IOException e) {
