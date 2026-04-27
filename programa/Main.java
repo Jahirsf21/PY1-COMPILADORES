@@ -32,7 +32,7 @@ public class Main {
             parser.parse();
             readerPar.close();
 
-            int errores_lexicos = lexer2.get_errores();
+            int errores_lexicos = lexer1.get_errores();
             int errores_sintacticos = parser.get_errores_sintacticos();
 
             if (errores_lexicos > 0 || errores_sintacticos > 0) {
