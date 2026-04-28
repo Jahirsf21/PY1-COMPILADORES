@@ -1,10 +1,10 @@
 # Proyecto 1 - Analisis Lexico y Sintactico
+<img width="250" height="44" alt="logo-tec" src="https://github.com/user-attachments/assets/a8a9c8d9-f1a6-481a-b542-577e156254e6" />
 **Institución:** Tecnológico  de Costa Rica Centro Académico de Limón  
 **Curso:** IC5701 - Compiladores e interpretes  
 **Grupo:** 60  
 **Profesor:** Allan Rodriguez Davila  
 **Semestre:** I Semestre 2026  
-
 ## Estudiantes
 
 | Nombre                   | Carnet      |
