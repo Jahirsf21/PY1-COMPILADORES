@@ -87,21 +87,4 @@ public class Scope {
     public void setHijos(ArrayList<Scope> hijos) {
         this.hijos = hijos;
     }
-
-    /**
-     * Busca un símbolo por su nombre en el scope actual y en sus scopes padres.
-     * @param nombre_simbolo El nombre del símbolo a buscar
-     * @return El símbolo encontrado o null si no se encuentra
-     */
-    public Symbols buscar(String nombre_simbolo) {
-        for (Symbols s : simbolos) {
-            if (s.getNombre().equals(nombre_simbolo)) {
-                return s;
-            }
-        }
-        if (padre != null) {
-            return padre.buscar(nombre_simbolo);
-        }
-        return null;
-    }
 }
