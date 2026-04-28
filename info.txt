@@ -1,0 +1,9 @@
+a. Nombre del curso: Compiladores e intérpretes
+b. Número de semestre y año lectivo: ISemestre 2026
+c. Nombres de los Estudiantes y número de carnet
+	Natalia Granados Rosales | 2021144286
+	Deislher Sánchez Funez | 2023032794
+e. Número de proyecto programado: 1
+f. Fecha de entrega: Lunes 27 de abril del 2026
+g. Estatus de la entrega (debe ser CONGRUENTE con la solución entregada):
+[|Buena|]
